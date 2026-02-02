@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dota 2 Meta Portal 2026</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com" rel="stylesheet">
+</head>
+<body>
+    <!-- Бегущая строка -->
+    <div class="stream-ticker">
+        <div class="ticker-wrap">
+            <div class="ticker-item">🔴 ПРЯМОЙ ЭФИР: Текущие матчи</div>
+            <div class="ticker-item">📺 Stream 2: BetBoom Dacha - Playoffs</div>
+            <div class="ticker-item">🔥 Текущий патч: 7.40с (Январь 2026)</div>
+            <div class="ticker-item">🔴 ПРЯМЫЕ ЭФИРЫ ПО ДОТЕ</div>
+        </div>
+    </div>
+
+    <nav>
+        <a href="index.html" class="active">ГЕРОИ</a>
+        <a href="items.html">ПРЕДМЕТЫ</a>
+        <a href="https://www.twitch.tv/directory/category/dota-2?lang=ru" target="_blank" class="live-btn">Twitch Live</a>
+         <a href="https://www.donationalerts.com/r/kisliks3215" target="_blank" class="live-btn">Поддержать</a>
+    </nav>
+
+    <div class="main-layout">
+        <!-- Левая панель -->
+        <aside class="sidebar side-left" data-aos="fade-right">
+            <div class="side-title">Live Chat</div>
+            <div class="chat-mock">
+                <p><span>User12:</span> Spectre имба!</p>
+                <p><span>ProFan:</span> Ждем 7.41...</p>
+                <p><span>DotaGod:</span> WK лучший керри</p>
+                <p><span>SupportMe:</span> Купите варды!</p>
+            </div>
+        </aside>
+
+        <!-- Центральный контент -->
+        <main class="container">
+            <h1 data-aos="fade-down">Популярные герои</h1>
+            <div class="grid" id="hero-grid"></div>
+
+            <section class="patch-notes" data-aos="fade-up">
+                <h2>Патчи 2026</h2>
+                <div class="patch-card">
+                    <h3>7.40 — Эпоха Аспектов</h3>
+                    <p>Класс: Глобальный баланс. Группировка по атрибутам обновлена.</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Правая панель -->
+        <aside class="sidebar side-right" data-aos="fade-left">
+            <div class="side-title">прошедшие матчи</div>
+            <div class="match-card">Spirit vs GG <br><small>20:00 MSK</small></div>
+            <div class="match-card">Liquid vs Azure <br><small>22:30 MSK</small></div>
+            <div class="match-card">BB vs Falcons <br><small></small></div>
+        </aside>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="modal-title"></h2>
+            <div id="modal-class" class="class-tag"></div>
+            <div id="modal-wr" style="color: #44ff44; font-weight: bold; margin-bottom: 15px;"></div>
+            <p id="modal-desc"></p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com"></script>
+    <script>
+        const heroes = [
+            {n: "Spectre", w: "54.12%", c: "Ловкость", d: "Керри S-тира. Аспект на Dispersion возвращает 16% урона."},
+            {n: "Wraith King", w: "53.55%", c: "Сила", d: "Скелеты получили криты. Перерождение стало быстрее."},
+            {n: "Abaddon", w: "53.64%", c: "Универсал", d: "Снимает дебаффы каждые 6 секунд."},
+            {n: "Enigma", w: "55.50%", c: "Интеллект", d: "Black Hole притягивает в радиусе 1200."},
+            {n: "Tidehunter", w: "54.91%", c: "Сила", d: "лучшая тройка с уроном"},
+            {n: "Arc Warden", w: "55.10%", c: "Ловкость", d: "Копия без штрафа к урону."},
+            {n: "Shadow Fiend", w: "52.30%", c: "Ловкость", d: "сильная ульта в прпавильных руках."},
+            {n: "Jakiro", w: "52.80%", c: "Интеллект", d: "Ice Path без задержки."},
+            {n: "Pudge", w: "51.20%", c: "Сила", d: "Хук-сильное оружие."},
+            {n: "Bristleback", w: "50.80%", c: "Сила", d: "Warpath дает маг. резист."},
+            {n: "Invoker", w: "51.10%", c: "Интеллект", d: "Сферы усиливают урон магии."},
+            {n: "Morphling", w: "49.50%", c: "Ловкость", d: "Копирует вражеских героев, сильный керри."},
+            {n: "Crystal Maiden", w: "52.10%", c: "Интеллект", d: "Аура регена маны всей команде."},
+            {n: "Marci", w: "51.80%", c: "Универсал", d: "Sidekick лечит двоих сразу."},
+            {n: "Magnus", w: "51.40%", c: "Универсал", d: "Empower дает сплэш дальникам."},
+            {n: "Void Spirit", w: "50.70%", c: "Универсал", d: "Щит Pulse Absorption поглощает всё."},
+            // Скрипт может автоматически добавить остальных до 32
+        ];
+
+        const grid = document.getElementById('hero-grid');
+        const modal = document.getElementById('modal');
+        const order = {"Сила": 1, "Ловкость": 2, "Интеллект": 3, "Универсал": 4};
+        heroes.sort((a, b) => order[a.c] - order[b.c]);
+
+        function getAttrClass(attr) {
+            if(attr === "Сила") return "attr-red";
+            if(attr === "Ловкость") return "attr-green";
+            if(attr === "Интеллект") return "attr-blue";
+            if(attr === "Универсал") return "attr-purple";
+            return "";
+        }
+
+        heroes.forEach((h, i) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.setAttribute('data-aos', 'fade-up');
+            card.setAttribute('data-aos-delay', (i % 6) * 50);
+            const colorClass = getAttrClass(h.c);
+            card.innerHTML = `<div class="hero-attr ${colorClass}">${h.c}</div><h3>${h.n}</h3><div class="rate">${h.w} WR</div>`;
+            card.onclick = () => {
+                document.getElementById('modal-title').innerText = h.n;
+                const mClass = document.getElementById('modal-class');
+                mClass.innerText = `Класс: ${h.c}`;
+                mClass.className = `class-tag ${colorClass}`;
+                document.getElementById('modal-wr').innerText = `Винрейт: ${h.w}`;
+                document.getElementById('modal-desc').innerText = h.d;
+                modal.classList.add('active');
+            };
+            grid.appendChild(card);
+        });
+
+        document.querySelector('.close-btn').onclick = () => modal.classList.remove('active');
+        window.onclick = (e) => { if(e.target == modal) modal.classList.remove('active'); };
+        AOS.init({ duration: 800, once: true });
+    </script>
+</body>
+</html>
