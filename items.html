@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dota 2 Meta | Items 2026</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com" rel="stylesheet">
+</head>
+<body>
+    <nav>
+        <a href="index.html">Герои</a>
+        <a href="items.html" class="active">Предметы</a>
+        <a href="https://www.twitch.tv/directory/category/dota-2?lang=ru" target="_blank" class="live-btn">Стрим 🔴</a>
+         <a href="https://www.donationalerts.com/r/kisliks3215" target="_blank" class="live-btn">Поддержать</a>
+    </nav>
+
+    <div class="container">
+        <h1 data-aos="fade-left">Популярные предметы</h1>
+        <div class="grid" id="item-grid"></div>
+
+        <section class="patch-notes" data-aos="fade-up">
+            <h2>Экономика и баланс</h2>
+            <div class="patch-card">
+                <h3>Патч 7.40 — Ребаланс Артефактов</h3>
+                <p>Класс: Экономическое обновление. Предметы сгруппированы для быстрого подбора под основной атрибут героя.</p>
+            </div>
+        </section>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="modal-title"></h2>
+            <div id="modal-class" class="class-tag"></div>
+            <div id="modal-wr" style="font-weight: bold; margin-bottom: 15px;"></div>
+            <p id="modal-desc"></p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com"></script>
+    <script>
+        const items = [
+            {n: "Satanic", w: "69.42%", c: "Сила", d: "Дает огромный вампиризм и сопротивление эффектам."},
+            {n: "Eye of Skadi", w: "69.76%", c: "Универсал", d: "Снижает лечение и скорость атаки врага."},
+            {n: "Shiva's Guard", w: "69.00%", c: "Интеллект", d: "Аура снижает восстановление маны и здоровья врагов."},
+            {n: "Octarine Core", w: "68.48%", c: "Интеллект", d: "25% CDR. Собирается через Aether Lens."},
+            {n: "Swift Blink", w: "66.30%", c: "Ловкость", d: "Блинк, дающий ловкость после прыжка."},
+            {n: "Butterfly", w: "61.40%", c: "Ловкость", d: "Уклонение и скорость атаки для керри."},
+            {n: "Daedalus", w: "62.16%", c: "Ловкость", d: "Самый большой физ. урон."},
+            {n: "Heart of Tarrasque", w: "56.80%", c: "Сила", d: "Колоссальная регенерация HP."},
+            {n: "Bloodstone", w: "62.16%", c: "Интеллект", d: "Магический вампиризм по области."},
+            {n: "Abyssal Blade", w: "58.40%", c: "Сила", d: "Гарантированный стан сквозь БКБ."},
+            {n: "Kandanda", w: "58.90%", c: "Универсал", d: "Доп. урон при касте направленного скилла."},
+            {n: "Harpoon", w: "56.70%", c: "Сила", d: "Притягивает врага к себе."},
+            {n: "Manta Style", w: "60.40%", c: "Ловкость", d: "Создает иллюзии и снимает дебаффы."},
+            {n: "Scythe of Vyse", w: "61.10%", c: "Интеллект", d: "Превращает врага в хекс."},
+            {n: "Gleipnir", w: "55.30%", c: "Интеллект", d: "Массовое оцепенение и молнии."},
+            {n: "Eternal Shroud", w: "55.80%", c: "Сила", d: "Превращает входящую магию в ману."},
+            {n: "Radiance", w: "54.30%", c: "Универсал", d: "Наносит урон огнем по области."},
+            {n: "Nullifier", w: "57.20%", c: "Ловкость", d: "Развеивает баффы врага."},
+            {n: "Refresher Orb", w: "63.20%", c: "Интеллект", d: "Сбрасывает все перезарядки."},
+            {n: "Assault Cuirass", w: "57.90%", c: "Сила", d: "Увеличивает броню союзников."},
+            {n: "Black King Bar", w: "50.10%", c: "Сила", d: "Иммунитет к дебаффам."},
+            {n: "Linken's Sphere", w: "53.20%", c: "Универсал", d: "Блокирует направленное заклинание."},
+            {n: "Bloodthorn", w: "63.00%", c: "Интеллект", d: "Сайленс и гарантированные криты."},
+            {n: "Ethereal Blade", w: "59.20%", c: "Интеллект", d: "Отправляет в астрал."}
+        ];
+
+        const grid = document.getElementById('item-grid');
+        const modal = document.getElementById('modal');
+
+        const order = {"Сила": 1, "Ловкость": 2, "Интеллект": 3, "Универсал": 4};
+        items.sort((a, b) => order[a.c] - order[b.c]);
+
+        function getAttrClass(attr) {
+            if(attr === "Сила") return "attr-red";
+            if(attr === "Ловкость") return "attr-green";
+            if(attr === "Интеллект") return "attr-blue";
+            if(attr === "Универсал") return "attr-purple";
+            return "";
+        }
+
+        items.forEach((item, i) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.setAttribute('data-aos', 'zoom-in');
+            card.setAttribute('data-aos-delay', (i % 6) * 50);
+            const colorClass = getAttrClass(item.c);
+            card.innerHTML = `<div class="hero-attr ${colorClass}">${item.c}</div><h3>${item.n}</h3><div class="rate" style="color: #fff; opacity: 0.8;">${item.w} WR</div>`;
+            card.onclick = () => {
+                document.getElementById('modal-title').innerText = item.n;
+                const mClass = document.getElementById('modal-class');
+                mClass.innerText = `Категория: ${item.c}`;
+                mClass.className = `class-tag ${colorClass}`;
+                const wrBox = document.getElementById('modal-wr');
+                wrBox.innerText = `Винрейт: ${item.w}`;
+                wrBox.style.color = "#44ff44";
+                document.getElementById('modal-desc').innerText = item.d;
+                modal.classList.add('active');
+            };
+            grid.appendChild(card);
+        });
+
+        document.querySelector('.close-btn').onclick = () => modal.classList.remove('active');
+        window.onclick = (e) => { if(e.target == modal) modal.classList.remove('active'); };
+        AOS.init({ duration: 800, once: true });
+    </script>
+</body>
+</html>
